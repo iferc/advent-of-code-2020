@@ -30,13 +30,15 @@ fn read_file(file_path: PathBuf) -> std::io::Result<String> {
     Ok(contents)
 }
 
-fn solve_challenge<D>(possible_challenge: Result<D, String>) -> Result<(), String>
+fn solve_challenge<D>(
+    possible_challenge: Result<D, String>,
+    data_parse_start_time: Instant,
+) -> Result<(), String>
 where
     D: SilverChallenge + GoldChallenge + std::fmt::Debug,
     <D as SilverChallenge>::Answer: std::fmt::Debug,
     <D as GoldChallenge>::Answer: std::fmt::Debug,
 {
-    let data_parse_start_time = Instant::now();
     let challenge = match possible_challenge {
         Err(error) => return Err(error),
         Ok(challenge) => challenge,
@@ -83,33 +85,34 @@ fn attempt_challenge_on_date(day: u32, data_override: &Option<String>) -> Result
         }
     };
 
-    println!("===> Day {} <===", day);
+    println!("===> Day {} <===\n{}", day, data);
+    let data_parse_start_time = Instant::now();
     match day {
-        1 => solve_challenge(Day01::new(data))?,
-        2 => solve_challenge(Day02::new(data))?,
-        3 => solve_challenge(Day03::new(data))?,
-        4 => solve_challenge(Day04::new(data))?,
-        5 => solve_challenge(Day05::new(data))?,
-        6 => solve_challenge(Day06::new(data))?,
-        7 => solve_challenge(Day07::new(data))?,
-        8 => solve_challenge(Day08::new(data))?,
-        9 => solve_challenge(Day09::new(data))?,
-        10 => solve_challenge(Day10::new(data))?,
-        11 => solve_challenge(Day11::new(data))?,
-        12 => solve_challenge(Day12::new(data))?,
-        13 => solve_challenge(Day13::new(data))?,
-        14 => solve_challenge(Day14::new(data))?,
-        15 => solve_challenge(Day15::new(data))?,
-        16 => solve_challenge(Day16::new(data))?,
-        17 => solve_challenge(Day17::new(data))?,
-        18 => solve_challenge(Day18::new(data))?,
-        19 => solve_challenge(Day19::new(data))?,
-        20 => solve_challenge(Day20::new(data))?,
-        21 => solve_challenge(Day21::new(data))?,
-        22 => solve_challenge(Day22::new(data))?,
-        23 => solve_challenge(Day23::new(data))?,
-        24 => solve_challenge(Day24::new(data))?,
-        25 => solve_challenge(Day25::new(data))?,
+        1 => solve_challenge(Day01::new(data), data_parse_start_time)?,
+        2 => solve_challenge(Day02::new(data), data_parse_start_time)?,
+        3 => solve_challenge(Day03::new(data), data_parse_start_time)?,
+        4 => solve_challenge(Day04::new(data), data_parse_start_time)?,
+        5 => solve_challenge(Day05::new(data), data_parse_start_time)?,
+        6 => solve_challenge(Day06::new(data), data_parse_start_time)?,
+        7 => solve_challenge(Day07::new(data), data_parse_start_time)?,
+        8 => solve_challenge(Day08::new(data), data_parse_start_time)?,
+        9 => solve_challenge(Day09::new(data), data_parse_start_time)?,
+        10 => solve_challenge(Day10::new(data), data_parse_start_time)?,
+        11 => solve_challenge(Day11::new(data), data_parse_start_time)?,
+        12 => solve_challenge(Day12::new(data), data_parse_start_time)?,
+        13 => solve_challenge(Day13::new(data), data_parse_start_time)?,
+        14 => solve_challenge(Day14::new(data), data_parse_start_time)?,
+        15 => solve_challenge(Day15::new(data), data_parse_start_time)?,
+        16 => solve_challenge(Day16::new(data), data_parse_start_time)?,
+        17 => solve_challenge(Day17::new(data), data_parse_start_time)?,
+        18 => solve_challenge(Day18::new(data), data_parse_start_time)?,
+        19 => solve_challenge(Day19::new(data), data_parse_start_time)?,
+        20 => solve_challenge(Day20::new(data), data_parse_start_time)?,
+        21 => solve_challenge(Day21::new(data), data_parse_start_time)?,
+        22 => solve_challenge(Day22::new(data), data_parse_start_time)?,
+        23 => solve_challenge(Day23::new(data), data_parse_start_time)?,
+        24 => solve_challenge(Day24::new(data), data_parse_start_time)?,
+        25 => solve_challenge(Day25::new(data), data_parse_start_time)?,
         _ => return Err(format!("Unrecognized date given: {}.", day)),
     };
 
