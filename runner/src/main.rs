@@ -30,9 +30,9 @@ fn read_file(file_path: PathBuf) -> std::io::Result<String> {
     Ok(contents)
 }
 
-fn attempt_challenge(day: u32, data_override: Option<String>) -> Result<(), String> {
+fn attempt_challenge(day: u32, data_override: &Option<String>) -> Result<(), String> {
     let data = match data_override {
-        Some(data) => data,
+        Some(data) => data.clone(),
         None => {
             let mut file_path = PathBuf::new();
             file_path.push("input");
@@ -45,29 +45,35 @@ fn attempt_challenge(day: u32, data_override: Option<String>) -> Result<(), Stri
         }
     };
 
+    let data_parse_start_time = Instant::now();
     let challenge = match day {
         1 => Day01::new(data),
         _ => return Err(format!("Unrecognized date given: {}.", day)),
     };
+    let data_parse_total_time = data_parse_start_time.elapsed();
 
-    println!("Solutions for day {}", day);
+    println!(
+        "Solution for day {}\n   Input data parsing time: {} ns",
+        day,
+        data_parse_total_time.as_nanos()
+    );
 
     println!("=> Silver:");
     let silver_start_time = Instant::now();
-    let silver_solution = challenge.attempt_silver()?;
+    let silver_solution = challenge.attempt_silver();
     let silver_total_time = silver_start_time.elapsed();
     println!(
-        "   Time take: {} ns\n   Solution: {}",
+        "   Time take: {} ns\n   Solution: {:?}",
         silver_total_time.as_nanos(),
         silver_solution
     );
 
     println!("=> Gold:");
     let gold_start_time = Instant::now();
-    let gold_solution = challenge.attempt_gold()?;
+    let gold_solution = challenge.attempt_gold();
     let gold_total_time = gold_start_time.elapsed();
     println!(
-        "   Time take: {} ns\n   Solution: {}",
+        "   Time take: {} ns\n   Solution: {:?}",
         gold_total_time.as_nanos(),
         gold_solution
     );
@@ -97,7 +103,11 @@ fn main() -> Result<(), String> {
     };
 
     if let Some(day) = opt.day {
-        return attempt_challenge(day, data_override);
+        return attempt_challenge(day, &data_override);
+    }
+
+    for day in 1..=1 {
+        attempt_challenge(day, &data_override)?;
     }
 
     Ok(())
