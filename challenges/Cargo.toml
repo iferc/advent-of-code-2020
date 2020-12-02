@@ -1,0 +1,10 @@
+[package]
+name = "advent-of-code-2020-challenges"
+version = "0.1.0"
+authors = ["iferc <github@iferc.ca>"]
+edition = "2018"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
