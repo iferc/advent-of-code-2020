@@ -46,9 +46,13 @@ fn attempt_challenge(day: u32, data_override: &Option<String>) -> Result<(), Str
     };
 
     let data_parse_start_time = Instant::now();
-    let challenge = match day {
+    let possible_challenge = match day {
         1 => Day01::new(data),
         _ => return Err(format!("Unrecognized date given: {}.", day)),
+    };
+    let challenge = match possible_challenge {
+        Err(error) => return Err(error),
+        Ok(challenge) => challenge,
     };
     let data_parse_total_time = data_parse_start_time.elapsed();
 
