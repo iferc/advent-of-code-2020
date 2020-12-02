@@ -1,17 +1,17 @@
 use crate::{GoldChallenge, SilverChallenge};
 
 #[derive(Debug)]
-pub struct Day01 {
+pub struct Day13 {
     data: String,
 }
 
-impl Day01 {
+impl Day13 {
     pub fn new(data: String) -> Result<Self, String> {
         Ok(Self { data })
     }
 }
 
-impl SilverChallenge for Day01 {
+impl SilverChallenge for Day13 {
     type Answer = ();
     fn attempt_silver(&self) -> Result<Self::Answer, String>
     where
@@ -21,7 +21,7 @@ impl SilverChallenge for Day01 {
     }
 }
 
-impl GoldChallenge for Day01 {
+impl GoldChallenge for Day13 {
     type Answer = ();
     fn attempt_gold(&self) -> Result<Self::Answer, String>
     where

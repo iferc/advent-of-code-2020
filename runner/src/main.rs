@@ -30,35 +30,20 @@ fn read_file(file_path: PathBuf) -> std::io::Result<String> {
     Ok(contents)
 }
 
-fn attempt_challenge(day: u32, data_override: &Option<String>) -> Result<(), String> {
-    let data = match data_override {
-        Some(data) => data.clone(),
-        None => {
-            let mut file_path = PathBuf::new();
-            file_path.push("input");
-            file_path.push(format!("day{:02}.txt", day));
-
-            match read_file(file_path) {
-                Err(_) => return Err(format!("Unable to read input file for day {}.", day)),
-                Ok(file_data) => file_data,
-            }
-        }
-    };
-
+fn solve_challenge<D>(possible_challenge: Result<D, String>) -> Result<(), String>
+where
+    D: SilverChallenge + GoldChallenge + std::fmt::Debug,
+    <D as SilverChallenge>::Answer: std::fmt::Debug,
+    <D as GoldChallenge>::Answer: std::fmt::Debug,
+{
     let data_parse_start_time = Instant::now();
-    let possible_challenge = match day {
-        1 => Day01::new(data),
-        _ => return Err(format!("Unrecognized date given: {}.", day)),
-    };
     let challenge = match possible_challenge {
         Err(error) => return Err(error),
         Ok(challenge) => challenge,
     };
     let data_parse_total_time = data_parse_start_time.elapsed();
-
     println!(
-        "===> Day {} <===\n-> Input data <-\nProcessing time: {} ns",
-        day,
+        "-> Input data <-\nProcessing time: {} ns",
         data_parse_total_time.as_nanos()
     );
 
@@ -79,6 +64,54 @@ fn attempt_challenge(day: u32, data_override: &Option<String>) -> Result<(), Str
         gold_total_time.as_nanos(),
         gold_solution
     );
+
+    Ok(())
+}
+
+fn attempt_challenge_on_date(day: u32, data_override: &Option<String>) -> Result<(), String> {
+    let data = match data_override {
+        Some(data) => data.clone(),
+        None => {
+            let mut file_path = PathBuf::new();
+            file_path.push("input");
+            file_path.push(format!("day{:02}.txt", day));
+
+            match read_file(file_path) {
+                Err(_) => return Err(format!("Unable to read input file for day {}.", day)),
+                Ok(file_data) => file_data,
+            }
+        }
+    };
+
+    println!("===> Day {} <===", day);
+    match day {
+        1 => solve_challenge(Day01::new(data))?,
+        2 => solve_challenge(Day02::new(data))?,
+        3 => solve_challenge(Day03::new(data))?,
+        4 => solve_challenge(Day04::new(data))?,
+        5 => solve_challenge(Day05::new(data))?,
+        6 => solve_challenge(Day06::new(data))?,
+        7 => solve_challenge(Day07::new(data))?,
+        8 => solve_challenge(Day08::new(data))?,
+        9 => solve_challenge(Day09::new(data))?,
+        10 => solve_challenge(Day10::new(data))?,
+        11 => solve_challenge(Day11::new(data))?,
+        12 => solve_challenge(Day12::new(data))?,
+        13 => solve_challenge(Day13::new(data))?,
+        14 => solve_challenge(Day14::new(data))?,
+        15 => solve_challenge(Day15::new(data))?,
+        16 => solve_challenge(Day16::new(data))?,
+        17 => solve_challenge(Day17::new(data))?,
+        18 => solve_challenge(Day18::new(data))?,
+        19 => solve_challenge(Day19::new(data))?,
+        20 => solve_challenge(Day20::new(data))?,
+        21 => solve_challenge(Day21::new(data))?,
+        22 => solve_challenge(Day22::new(data))?,
+        23 => solve_challenge(Day23::new(data))?,
+        24 => solve_challenge(Day24::new(data))?,
+        25 => solve_challenge(Day25::new(data))?,
+        _ => return Err(format!("Unrecognized date given: {}.", day)),
+    };
 
     Ok(())
 }
@@ -105,11 +138,11 @@ fn main() -> Result<(), String> {
     };
 
     if let Some(day) = opt.day {
-        return attempt_challenge(day, &data_override);
+        return attempt_challenge_on_date(day, &data_override);
     }
 
-    for day in 1..=1 {
-        attempt_challenge(day, &data_override)?;
+    for day in 1..=25 {
+        attempt_challenge_on_date(day, &data_override).ok();
     }
 
     Ok(())
