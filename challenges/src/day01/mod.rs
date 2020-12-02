@@ -2,31 +2,87 @@ use crate::{GoldChallenge, SilverChallenge};
 
 #[derive(Debug)]
 pub struct Day01 {
-    data: String,
+    values_asc: Vec<u32>,
+    values_desc: Vec<u32>,
 }
 
 impl Day01 {
     pub fn new(data: String) -> Result<Self, String> {
-        Ok(Self { data })
+        let maybe_lines: Result<Vec<u32>, _> = data.split_whitespace().map(|s| s.parse()).collect();
+        let lines = match maybe_lines {
+            Err(_) => return Err("Error parsing number values from input".into()),
+            Ok(mut lines) => {
+                lines.sort_unstable();
+                lines
+            }
+        };
+        let reverse_lines: Vec<_> = lines.clone().into_iter().rev().collect();
+
+        Ok(Self {
+            values_asc: lines,
+            values_desc: reverse_lines,
+        })
     }
 }
 
+#[derive(Debug)]
+pub struct SilverSolution {
+    numbers: [u32; 2],
+    result: u32,
+}
 impl SilverChallenge for Day01 {
-    type Answer = ();
-    fn attempt_silver(&self) -> Result<Self::Answer, String>
-    where
-        Self::Answer: std::fmt::Debug,
-    {
-        Err("NYI".into())
+    type Answer = SilverSolution;
+    fn attempt_silver(&self) -> Result<Self::Answer, String> {
+        for asc_line in &self.values_asc {
+            for desc_line in &self.values_desc {
+                // end iteration on collision
+                if asc_line > desc_line {
+                    break;
+                }
+
+                if 2020 == asc_line + desc_line {
+                    return Ok(SilverSolution {
+                        numbers: [*asc_line, *desc_line],
+                        result: asc_line * desc_line,
+                    });
+                }
+            }
+        }
+
+        Err("No solution found!".into())
     }
 }
 
+#[derive(Debug)]
+pub struct GoldSolution {
+    numbers: [u32; 3],
+    result: u32,
+}
 impl GoldChallenge for Day01 {
-    type Answer = ();
-    fn attempt_gold(&self) -> Result<Self::Answer, String>
-    where
-        Self::Answer: std::fmt::Debug,
-    {
-        Err("NYI".into())
+    type Answer = GoldSolution;
+    fn attempt_gold(&self) -> Result<Self::Answer, String> {
+        for asc_line_1 in &self.values_asc {
+            for asc_line_2 in &self.values_asc {
+                if asc_line_1 > asc_line_2 {
+                    continue;
+                }
+                for desc_line in &self.values_desc {
+                    // end iteration on collision
+                    if asc_line_1 > desc_line {
+                        break;
+                    }
+
+                    if 2020 == asc_line_1 + asc_line_2 + desc_line {
+                        // return Ok(format!("{}", asc_line_1 * asc_line_2 * desc_line));
+                        return Ok(GoldSolution {
+                            numbers: [*asc_line_1, *asc_line_2, *desc_line],
+                            result: asc_line_1 * asc_line_2 * desc_line,
+                        });
+                    }
+                }
+            }
+        }
+
+        Err("No solution found!".into())
     }
 }
