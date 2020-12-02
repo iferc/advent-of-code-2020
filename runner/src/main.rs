@@ -57,27 +57,25 @@ fn attempt_challenge(day: u32, data_override: &Option<String>) -> Result<(), Str
     let data_parse_total_time = data_parse_start_time.elapsed();
 
     println!(
-        "Solution for day {}\n   Input data parsing time: {} ns",
+        "===> Day {} <===\n-> Input data <-\nProcessing time: {} ns",
         day,
         data_parse_total_time.as_nanos()
     );
 
-    println!("=> Silver:");
     let silver_start_time = Instant::now();
     let silver_solution = challenge.attempt_silver();
     let silver_total_time = silver_start_time.elapsed();
     println!(
-        "   Time take: {} ns\n   Solution: {:?}",
+        "-> Silver <-\nProcessing time: {} ns\n{:#?}",
         silver_total_time.as_nanos(),
         silver_solution
     );
 
-    println!("=> Gold:");
     let gold_start_time = Instant::now();
     let gold_solution = challenge.attempt_gold();
     let gold_total_time = gold_start_time.elapsed();
     println!(
-        "   Time take: {} ns\n   Solution: {:?}",
+        "-> Gold <-\nProcessing time: {} ns\n{:#?}",
         gold_total_time.as_nanos(),
         gold_solution
     );
