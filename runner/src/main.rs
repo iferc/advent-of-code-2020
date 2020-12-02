@@ -85,7 +85,7 @@ fn attempt_challenge_on_date(day: u32, data_override: &Option<String>) -> Result
         }
     };
 
-    println!("===> Day {} <===\n{}", day, data);
+    println!("===> Day {} <===", day);
     let data_parse_start_time = Instant::now();
     match day {
         1 => solve_challenge(Day01::new(data), data_parse_start_time)?,
