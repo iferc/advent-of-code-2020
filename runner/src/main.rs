@@ -1,4 +1,5 @@
 use advent_of_code_2020_challenges::*;
+use separator::Separatable;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
@@ -45,16 +46,16 @@ where
     };
     let data_parse_total_time = data_parse_start_time.elapsed();
     println!(
-        "-> Input data <-\nProcessing time: {} ms",
-        data_parse_total_time.as_millis()
+        "-> Input data <-\nProcessing time: {} μs",
+        data_parse_total_time.as_micros().separated_string()
     );
 
     let silver_start_time = Instant::now();
     let silver_solution = challenge.attempt_silver();
     let silver_total_time = silver_start_time.elapsed();
     println!(
-        "-> Silver <-\nProcessing time: {} ms\n{:#?}",
-        silver_total_time.as_millis(),
+        "-> Silver <-\nProcessing time: {} μs\n{:#?}",
+        silver_total_time.as_micros().separated_string(),
         silver_solution
     );
 
@@ -62,8 +63,8 @@ where
     let gold_solution = challenge.attempt_gold();
     let gold_total_time = gold_start_time.elapsed();
     println!(
-        "-> Gold <-\nProcessing time: {} ms\n{:#?}",
-        gold_total_time.as_millis(),
+        "-> Gold <-\nProcessing time: {} μs\n{:#?}",
+        gold_total_time.as_micros().separated_string(),
         gold_solution
     );
 
