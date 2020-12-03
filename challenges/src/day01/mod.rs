@@ -25,7 +25,7 @@ impl Day01 {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct SilverSolution {
     numbers: [u32; 2],
     result: u32,
@@ -53,7 +53,7 @@ impl SilverChallenge for Day01 {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct GoldSolution {
     numbers: [u32; 3],
     result: u32,
