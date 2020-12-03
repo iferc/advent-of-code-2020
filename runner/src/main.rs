@@ -20,6 +20,10 @@ struct Opt {
     /// Input string, defaults to input stored with date of challenge
     #[structopt(short, long, env = "INPUT_DATA")]
     data: Option<String>,
+
+    /// Whether or not to hide solutions
+    #[structopt(long)]
+    hide_solutions: bool,
 }
 
 fn read_file(file_path: PathBuf) -> std::io::Result<String> {
@@ -34,6 +38,7 @@ fn read_file(file_path: PathBuf) -> std::io::Result<String> {
 fn solve_challenge<D>(
     possible_challenge: Result<D, String>,
     data_parse_start_time: Instant,
+    hide_solutions: bool,
 ) -> Result<(), String>
 where
     D: SilverChallenge + GoldChallenge + std::fmt::Debug,
@@ -54,24 +59,32 @@ where
     let silver_solution = challenge.attempt_silver();
     let silver_total_time = silver_start_time.elapsed();
     println!(
-        "-> Silver <-\nProcessing time: {} μs\n{:#?}",
+        "-> Silver <-\nProcessing time: {} μs",
         silver_total_time.as_micros().separated_string(),
-        silver_solution
     );
+    if !hide_solutions {
+        println!("{:#?}", silver_solution);
+    }
 
     let gold_start_time = Instant::now();
     let gold_solution = challenge.attempt_gold();
     let gold_total_time = gold_start_time.elapsed();
     println!(
-        "-> Gold <-\nProcessing time: {} μs\n{:#?}",
+        "-> Gold <-\nProcessing time: {} μs",
         gold_total_time.as_micros().separated_string(),
-        gold_solution
     );
+    if !hide_solutions {
+        println!("{:#?}", gold_solution);
+    }
 
     Ok(())
 }
 
-fn attempt_challenge_on_date(day: u32, data_override: &Option<String>) -> Result<(), String> {
+fn attempt_challenge_on_date(
+    day: u32,
+    data_override: &Option<String>,
+    hide_solutions: bool,
+) -> Result<(), String> {
     let data = match data_override {
         Some(data) => data.clone(),
         None => {
@@ -89,31 +102,31 @@ fn attempt_challenge_on_date(day: u32, data_override: &Option<String>) -> Result
     println!("===> Day {} <===", day);
     let data_parse_start_time = Instant::now();
     match day {
-        1 => solve_challenge(Day01::new(data), data_parse_start_time)?,
-        2 => solve_challenge(Day02::new(data), data_parse_start_time)?,
-        3 => solve_challenge(Day03::new(data), data_parse_start_time)?,
-        4 => solve_challenge(Day04::new(data), data_parse_start_time)?,
-        5 => solve_challenge(Day05::new(data), data_parse_start_time)?,
-        6 => solve_challenge(Day06::new(data), data_parse_start_time)?,
-        7 => solve_challenge(Day07::new(data), data_parse_start_time)?,
-        8 => solve_challenge(Day08::new(data), data_parse_start_time)?,
-        9 => solve_challenge(Day09::new(data), data_parse_start_time)?,
-        10 => solve_challenge(Day10::new(data), data_parse_start_time)?,
-        11 => solve_challenge(Day11::new(data), data_parse_start_time)?,
-        12 => solve_challenge(Day12::new(data), data_parse_start_time)?,
-        13 => solve_challenge(Day13::new(data), data_parse_start_time)?,
-        14 => solve_challenge(Day14::new(data), data_parse_start_time)?,
-        15 => solve_challenge(Day15::new(data), data_parse_start_time)?,
-        16 => solve_challenge(Day16::new(data), data_parse_start_time)?,
-        17 => solve_challenge(Day17::new(data), data_parse_start_time)?,
-        18 => solve_challenge(Day18::new(data), data_parse_start_time)?,
-        19 => solve_challenge(Day19::new(data), data_parse_start_time)?,
-        20 => solve_challenge(Day20::new(data), data_parse_start_time)?,
-        21 => solve_challenge(Day21::new(data), data_parse_start_time)?,
-        22 => solve_challenge(Day22::new(data), data_parse_start_time)?,
-        23 => solve_challenge(Day23::new(data), data_parse_start_time)?,
-        24 => solve_challenge(Day24::new(data), data_parse_start_time)?,
-        25 => solve_challenge(Day25::new(data), data_parse_start_time)?,
+        1 => solve_challenge(Day01::new(data), data_parse_start_time, hide_solutions)?,
+        2 => solve_challenge(Day02::new(data), data_parse_start_time, hide_solutions)?,
+        3 => solve_challenge(Day03::new(data), data_parse_start_time, hide_solutions)?,
+        4 => solve_challenge(Day04::new(data), data_parse_start_time, hide_solutions)?,
+        5 => solve_challenge(Day05::new(data), data_parse_start_time, hide_solutions)?,
+        6 => solve_challenge(Day06::new(data), data_parse_start_time, hide_solutions)?,
+        7 => solve_challenge(Day07::new(data), data_parse_start_time, hide_solutions)?,
+        8 => solve_challenge(Day08::new(data), data_parse_start_time, hide_solutions)?,
+        9 => solve_challenge(Day09::new(data), data_parse_start_time, hide_solutions)?,
+        10 => solve_challenge(Day10::new(data), data_parse_start_time, hide_solutions)?,
+        11 => solve_challenge(Day11::new(data), data_parse_start_time, hide_solutions)?,
+        12 => solve_challenge(Day12::new(data), data_parse_start_time, hide_solutions)?,
+        13 => solve_challenge(Day13::new(data), data_parse_start_time, hide_solutions)?,
+        14 => solve_challenge(Day14::new(data), data_parse_start_time, hide_solutions)?,
+        15 => solve_challenge(Day15::new(data), data_parse_start_time, hide_solutions)?,
+        16 => solve_challenge(Day16::new(data), data_parse_start_time, hide_solutions)?,
+        17 => solve_challenge(Day17::new(data), data_parse_start_time, hide_solutions)?,
+        18 => solve_challenge(Day18::new(data), data_parse_start_time, hide_solutions)?,
+        19 => solve_challenge(Day19::new(data), data_parse_start_time, hide_solutions)?,
+        20 => solve_challenge(Day20::new(data), data_parse_start_time, hide_solutions)?,
+        21 => solve_challenge(Day21::new(data), data_parse_start_time, hide_solutions)?,
+        22 => solve_challenge(Day22::new(data), data_parse_start_time, hide_solutions)?,
+        23 => solve_challenge(Day23::new(data), data_parse_start_time, hide_solutions)?,
+        24 => solve_challenge(Day24::new(data), data_parse_start_time, hide_solutions)?,
+        25 => solve_challenge(Day25::new(data), data_parse_start_time, hide_solutions)?,
         _ => return Err(format!("Unrecognized date given: {}.", day)),
     };
 
@@ -142,11 +155,11 @@ fn main() -> Result<(), String> {
     };
 
     if let Some(day) = opt.day {
-        return attempt_challenge_on_date(day, &data_override);
+        return attempt_challenge_on_date(day, &data_override, opt.hide_solutions);
     }
 
     for day in 1..=25 {
-        attempt_challenge_on_date(day, &data_override).ok();
+        attempt_challenge_on_date(day, &data_override, opt.hide_solutions).ok();
     }
 
     Ok(())
