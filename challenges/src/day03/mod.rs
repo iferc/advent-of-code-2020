@@ -1,6 +1,6 @@
 use crate::{GoldChallenge, SilverChallenge};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Day03 {
     data: String,
 }
