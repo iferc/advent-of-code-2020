@@ -67,33 +67,6 @@ impl Day02 {
     }
 }
 
-impl SilverChallenge for Day02 {
-    type Answer = usize;
-
-    fn attempt_silver(&self) -> Result<Self::Answer, String>
-    where
-        Self::Answer: std::fmt::Debug,
-    {
-        let occurrence_counts: Vec<_> = self
-            .passwords
-            .iter()
-            .map(|p| {
-                let occurrence_count = p
-                    .password
-                    .matches(p.policy.symbol.as_str())
-                    .collect::<Vec<_>>()
-                    .len();
-
-                p.policy.amount_range.start <= occurrence_count
-                    && p.policy.amount_range.end >= occurrence_count
-            })
-            .filter(|validity| *validity)
-            .collect();
-
-        Ok(occurrence_counts.len())
-    }
-}
-
 #[test]
 fn sample_1_parses_as_1_valid() {
     let input = "1-3 a: abcde".into();
@@ -182,6 +155,33 @@ fn sample_all_1_through_3_parses_as_2_valid() {
     );
 }
 
+impl SilverChallenge for Day02 {
+    type Answer = usize;
+
+    fn attempt_silver(&self) -> Result<Self::Answer, String>
+    where
+        Self::Answer: std::fmt::Debug,
+    {
+        let occurrence_counts: Vec<_> = self
+            .passwords
+            .iter()
+            .map(|p| {
+                let occurrence_count = p
+                    .password
+                    .matches(p.policy.symbol.as_str())
+                    .collect::<Vec<_>>()
+                    .len();
+
+                p.policy.amount_range.start <= occurrence_count
+                    && p.policy.amount_range.end >= occurrence_count
+            })
+            .filter(|validity| *validity)
+            .collect();
+
+        Ok(occurrence_counts.len())
+    }
+}
+
 #[test]
 fn sample_1_silver_parses_as_1_valid() {
     let input = "1-3 a: abcde".into();
@@ -215,11 +215,60 @@ fn sample_all_silver_1_through_3_parses_as_2_valid() {
 }
 
 impl GoldChallenge for Day02 {
-    type Answer = ();
+    type Answer = usize;
     fn attempt_gold(&self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug,
     {
-        Err("NYI".into())
+        let occurrence_counts: Vec<_> = self
+            .passwords
+            .iter()
+            .map(|p| {
+                let password_chars: Vec<_> = p.password.chars().collect();
+                let first_index_char = password_chars[p.policy.amount_range.start - 1].to_string();
+                let second_index_char = password_chars[p.policy.amount_range.end - 1].to_string();
+
+                match (first_index_char, second_index_char) {
+                    (a, b) if a == p.policy.symbol && b != p.policy.symbol => true,
+                    (a, b) if a != p.policy.symbol && b == p.policy.symbol => true,
+                    _ => false,
+                }
+            })
+            .filter(|validity| *validity)
+            .collect();
+
+        Ok(occurrence_counts.len())
     }
+}
+
+#[test]
+fn sample_1_gold_parses_as_1_valid() {
+    let input = "1-3 a: abcde".into();
+    let challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_gold();
+    assert_eq!(answer.ok(), Some(1));
+}
+
+#[test]
+fn sample_2_gold_parses_as_0_valid() {
+    let input = "1-3 b: cdefg".into();
+    let challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_gold();
+    assert_eq!(answer.ok(), Some(0));
+}
+
+#[test]
+fn sample_3_gold_parses_as_1_valid() {
+    let input = "2-9 c: ccccccccc".into();
+    let challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_gold();
+    assert_eq!(answer.ok(), Some(0));
+}
+
+#[test]
+fn sample_all_gold_1_through_3_parses_as_2_valid() {
+    let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
+    let challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_gold();
+    assert_eq!(answer.ok(), Some(1));
 }
