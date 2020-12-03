@@ -45,16 +45,16 @@ where
     };
     let data_parse_total_time = data_parse_start_time.elapsed();
     println!(
-        "-> Input data <-\nProcessing time: {} ns",
-        data_parse_total_time.as_nanos()
+        "-> Input data <-\nProcessing time: {} ms",
+        data_parse_total_time.as_millis()
     );
 
     let silver_start_time = Instant::now();
     let silver_solution = challenge.attempt_silver();
     let silver_total_time = silver_start_time.elapsed();
     println!(
-        "-> Silver <-\nProcessing time: {} ns\n{:#?}",
-        silver_total_time.as_nanos(),
+        "-> Silver <-\nProcessing time: {} ms\n{:#?}",
+        silver_total_time.as_millis(),
         silver_solution
     );
 
@@ -62,8 +62,8 @@ where
     let gold_solution = challenge.attempt_gold();
     let gold_total_time = gold_start_time.elapsed();
     println!(
-        "-> Gold <-\nProcessing time: {} ns\n{:#?}",
-        gold_total_time.as_nanos(),
+        "-> Gold <-\nProcessing time: {} ms\n{:#?}",
+        gold_total_time.as_millis(),
         gold_solution
     );
 
