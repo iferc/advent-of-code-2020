@@ -95,6 +95,22 @@ impl Day03 {
 
         Some(&self.map.elevations[self.location.down][periodic_right])
     }
+
+    pub fn count_trees_for_slope(&mut self, right: usize, left: usize) -> usize {
+        let mut counter = if self.tile() == Some(&Tile::Tree) {
+            1
+        } else {
+            0
+        };
+
+        while let Some(tile) = self.navigate(right, left).tile() {
+            if tile == &Tile::Tree {
+                counter += 1;
+            }
+        }
+
+        counter
+    }
 }
 
 #[cfg(test)]
@@ -166,19 +182,7 @@ impl SilverChallenge for Day03 {
     where
         Self::Answer: std::fmt::Debug,
     {
-        let mut counter = if self.tile() == Some(&Tile::Tree) {
-            1
-        } else {
-            0
-        };
-
-        while let Some(tile) = self.navigate(3, 1).tile() {
-            if tile == &Tile::Tree {
-                counter += 1;
-            }
-        }
-
-        Ok(counter)
+        Ok(self.reset().count_trees_for_slope(3, 1))
     }
 }
 
@@ -196,55 +200,20 @@ impl GoldChallenge for Day03 {
     where
         Self::Answer: std::fmt::Debug,
     {
-        let base_counter = if self.tile() == Some(&Tile::Tree) {
-            1
-        } else {
-            0
-        };
-
-        let mut counters: [usize; 5] = [
-            base_counter,
-            base_counter,
-            base_counter,
-            base_counter,
-            base_counter,
-        ];
-
         // since both challenges use the same data,
         // resetting immediately is necessary although it might be
         // worth changing the runner to instantiate each separately
-        self.reset();
-        while let Some(tile) = self.navigate(1, 1).tile() {
-            if tile == &Tile::Tree {
-                counters[0] += 1;
-            }
-        }
-        self.reset();
-        while let Some(tile) = self.navigate(3, 1).tile() {
-            if tile == &Tile::Tree {
-                counters[1] += 1;
-            }
-        }
-        self.reset();
-        while let Some(tile) = self.navigate(5, 1).tile() {
-            if tile == &Tile::Tree {
-                counters[2] += 1;
-            }
-        }
-        self.reset();
-        while let Some(tile) = self.navigate(7, 1).tile() {
-            if tile == &Tile::Tree {
-                counters[3] += 1;
-            }
-        }
-        self.reset();
-        while let Some(tile) = self.navigate(1, 2).tile() {
-            if tile == &Tile::Tree {
-                counters[4] += 1;
-            }
-        }
+
+        let counters: [usize; 5] = [
+            self.reset().count_trees_for_slope(1, 1),
+            self.reset().count_trees_for_slope(3, 1),
+            self.reset().count_trees_for_slope(5, 1),
+            self.reset().count_trees_for_slope(7, 1),
+            self.reset().count_trees_for_slope(1, 2),
+        ];
 
         let solution = counters.iter().fold(1, |acc, x| acc * x);
+
         Ok(solution)
     }
 }
