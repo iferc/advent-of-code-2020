@@ -52,14 +52,14 @@ pub use day25::Day25;
 
 pub trait SilverChallenge {
     type Answer;
-    fn attempt_silver(&self) -> Result<Self::Answer, String>
+    fn attempt_silver(&mut self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug;
 }
 
 pub trait GoldChallenge {
     type Answer;
-    fn attempt_gold(&self) -> Result<Self::Answer, String>
+    fn attempt_gold(&mut self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug;
 }

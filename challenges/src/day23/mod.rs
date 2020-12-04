@@ -13,7 +13,7 @@ impl Day23 {
 
 impl SilverChallenge for Day23 {
     type Answer = ();
-    fn attempt_silver(&self) -> Result<Self::Answer, String>
+    fn attempt_silver(&mut self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug,
     {
@@ -23,7 +23,7 @@ impl SilverChallenge for Day23 {
 
 impl GoldChallenge for Day23 {
     type Answer = ();
-    fn attempt_gold(&self) -> Result<Self::Answer, String>
+    fn attempt_gold(&mut self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug,
     {

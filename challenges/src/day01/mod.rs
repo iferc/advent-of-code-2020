@@ -32,7 +32,7 @@ pub struct SilverSolution {
 }
 impl SilverChallenge for Day01 {
     type Answer = SilverSolution;
-    fn attempt_silver(&self) -> Result<Self::Answer, String> {
+    fn attempt_silver(&mut self) -> Result<Self::Answer, String> {
         for asc_line in &self.values_asc {
             for desc_line in &self.values_desc {
                 // end iteration on collision
@@ -60,7 +60,7 @@ pub struct GoldSolution {
 }
 impl GoldChallenge for Day01 {
     type Answer = GoldSolution;
-    fn attempt_gold(&self) -> Result<Self::Answer, String> {
+    fn attempt_gold(&mut self) -> Result<Self::Answer, String> {
         for asc_line_1 in &self.values_asc {
             for asc_line_2 in &self.values_asc {
                 if asc_line_1 > asc_line_2 {

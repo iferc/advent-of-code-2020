@@ -45,7 +45,7 @@ where
     <D as SilverChallenge>::Answer: std::fmt::Debug,
     <D as GoldChallenge>::Answer: std::fmt::Debug,
 {
-    let challenge = match possible_challenge {
+    let mut challenge = match possible_challenge {
         Err(error) => return Err(error),
         Ok(challenge) => challenge,
     };

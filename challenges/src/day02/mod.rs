@@ -158,7 +158,7 @@ fn sample_all_1_through_3_parses_as_2_valid() {
 impl SilverChallenge for Day02 {
     type Answer = usize;
 
-    fn attempt_silver(&self) -> Result<Self::Answer, String>
+    fn attempt_silver(&mut self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug,
     {
@@ -185,7 +185,7 @@ impl SilverChallenge for Day02 {
 #[test]
 fn sample_1_silver_parses_as_1_valid() {
     let input = "1-3 a: abcde".into();
-    let challenge = Day02::new(input).unwrap();
+    let mut challenge = Day02::new(input).unwrap();
     let answer = challenge.attempt_silver();
     assert_eq!(answer.ok(), Some(1));
 }
@@ -193,7 +193,7 @@ fn sample_1_silver_parses_as_1_valid() {
 #[test]
 fn sample_2_silver_parses_as_0_valid() {
     let input = "1-3 b: cdefg".into();
-    let challenge = Day02::new(input).unwrap();
+    let mut challenge = Day02::new(input).unwrap();
     let answer = challenge.attempt_silver();
     assert_eq!(answer.ok(), Some(0));
 }
@@ -201,7 +201,7 @@ fn sample_2_silver_parses_as_0_valid() {
 #[test]
 fn sample_3_silver_parses_as_1_valid() {
     let input = "2-9 c: ccccccccc".into();
-    let challenge = Day02::new(input).unwrap();
+    let mut challenge = Day02::new(input).unwrap();
     let answer = challenge.attempt_silver();
     assert_eq!(answer.ok(), Some(1));
 }
@@ -209,14 +209,14 @@ fn sample_3_silver_parses_as_1_valid() {
 #[test]
 fn sample_all_silver_1_through_3_parses_as_2_valid() {
     let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
-    let challenge = Day02::new(input).unwrap();
+    let mut challenge = Day02::new(input).unwrap();
     let answer = challenge.attempt_silver();
     assert_eq!(answer.ok(), Some(2));
 }
 
 impl GoldChallenge for Day02 {
     type Answer = usize;
-    fn attempt_gold(&self) -> Result<Self::Answer, String>
+    fn attempt_gold(&mut self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug,
     {
@@ -244,7 +244,7 @@ impl GoldChallenge for Day02 {
 #[test]
 fn sample_1_gold_parses_as_1_valid() {
     let input = "1-3 a: abcde".into();
-    let challenge = Day02::new(input).unwrap();
+    let mut challenge = Day02::new(input).unwrap();
     let answer = challenge.attempt_gold();
     assert_eq!(answer.ok(), Some(1));
 }
@@ -252,7 +252,7 @@ fn sample_1_gold_parses_as_1_valid() {
 #[test]
 fn sample_2_gold_parses_as_0_valid() {
     let input = "1-3 b: cdefg".into();
-    let challenge = Day02::new(input).unwrap();
+    let mut challenge = Day02::new(input).unwrap();
     let answer = challenge.attempt_gold();
     assert_eq!(answer.ok(), Some(0));
 }
@@ -260,7 +260,7 @@ fn sample_2_gold_parses_as_0_valid() {
 #[test]
 fn sample_3_gold_parses_as_1_valid() {
     let input = "2-9 c: ccccccccc".into();
-    let challenge = Day02::new(input).unwrap();
+    let mut challenge = Day02::new(input).unwrap();
     let answer = challenge.attempt_gold();
     assert_eq!(answer.ok(), Some(0));
 }
@@ -268,7 +268,7 @@ fn sample_3_gold_parses_as_1_valid() {
 #[test]
 fn sample_all_gold_1_through_3_parses_as_2_valid() {
     let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
-    let challenge = Day02::new(input).unwrap();
+    let mut challenge = Day02::new(input).unwrap();
     let answer = challenge.attempt_gold();
     assert_eq!(answer.ok(), Some(1));
 }
