@@ -70,7 +70,7 @@ impl Day02 {
 #[test]
 fn sample_1_parses_as_1_valid() {
     let input = "1-3 a: abcde".into();
-    let challenge = Day02::new(input);
+    let mut challenge = Day02::new(input);
     assert_eq!(
         challenge,
         Ok(Day02 {
@@ -88,7 +88,7 @@ fn sample_1_parses_as_1_valid() {
 #[test]
 fn sample_2_parses_as_0_valid() {
     let input = "1-3 b: cdefg".into();
-    let challenge = Day02::new(input);
+    let mut challenge = Day02::new(input);
     assert_eq!(
         challenge,
         Ok(Day02 {
@@ -106,7 +106,7 @@ fn sample_2_parses_as_0_valid() {
 #[test]
 fn sample_3_parses_as_1_valid() {
     let input = "2-9 c: ccccccccc".into();
-    let challenge = Day02::new(input);
+    let mut challenge = Day02::new(input);
     assert_eq!(
         challenge,
         Ok(Day02 {
@@ -124,7 +124,7 @@ fn sample_3_parses_as_1_valid() {
 #[test]
 fn sample_all_1_through_3_parses_as_2_valid() {
     let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
-    let challenge = Day02::new(input);
+    let mut challenge = Day02::new(input);
     assert_eq!(
         challenge,
         Ok(Day02 {
