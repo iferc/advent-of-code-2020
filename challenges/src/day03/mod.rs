@@ -68,7 +68,13 @@ impl Day03 {
         })
     }
 
-    // todo: add thing for being off map
+    pub fn reset(&mut self) -> &mut Self {
+        self.location.right = 0;
+        self.location.down = 0;
+
+        self
+    }
+
     pub fn navigate(&mut self, right: usize, down: usize) -> &mut Self {
         self.location.right += right;
         self.location.down += down;
@@ -155,6 +161,7 @@ fn sample_map_location() {
 
 impl SilverChallenge for Day03 {
     type Answer = usize;
+
     fn attempt_silver(&mut self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug,
@@ -175,12 +182,76 @@ impl SilverChallenge for Day03 {
     }
 }
 
+#[test]
+fn sample_map_silver_solution() {
+    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+
+    assert_eq!(challenge.attempt_silver(), Ok(7));
+}
+
 impl GoldChallenge for Day03 {
-    type Answer = ();
+    type Answer = usize;
+
     fn attempt_gold(&mut self) -> Result<Self::Answer, String>
     where
         Self::Answer: std::fmt::Debug,
     {
-        Err("NYI".into())
+        let base_counter = if self.tile() == Some(&Tile::Tree) {
+            1
+        } else {
+            0
+        };
+
+        let mut counters: [usize; 5] = [
+            base_counter,
+            base_counter,
+            base_counter,
+            base_counter,
+            base_counter,
+        ];
+
+        // since both challenges use the same data,
+        // resetting immediately is necessary although it might be
+        // worth changing the runner to instantiate each separately
+        self.reset();
+        while let Some(tile) = self.navigate(1, 1).tile() {
+            if tile == &Tile::Tree {
+                counters[0] += 1;
+            }
+        }
+        self.reset();
+        while let Some(tile) = self.navigate(3, 1).tile() {
+            if tile == &Tile::Tree {
+                counters[1] += 1;
+            }
+        }
+        self.reset();
+        while let Some(tile) = self.navigate(5, 1).tile() {
+            if tile == &Tile::Tree {
+                counters[2] += 1;
+            }
+        }
+        self.reset();
+        while let Some(tile) = self.navigate(7, 1).tile() {
+            if tile == &Tile::Tree {
+                counters[3] += 1;
+            }
+        }
+        self.reset();
+        while let Some(tile) = self.navigate(1, 2).tile() {
+            if tile == &Tile::Tree {
+                counters[4] += 1;
+            }
+        }
+
+        let solution = counters.iter().fold(1, |acc, x| acc * x);
+        Ok(solution)
     }
+}
+
+#[test]
+fn sample_map_gold_solution() {
+    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+
+    assert_eq!(challenge.attempt_gold(), Ok(336));
 }
