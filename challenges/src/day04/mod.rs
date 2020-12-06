@@ -1,3 +1,4 @@
+mod passports;
 #[cfg(test)]
 mod tests;
 
@@ -11,12 +12,19 @@ pub struct Day04 {
 
 impl Day04 {
     pub fn new(data: &str) -> Result<Self, String> {
-        Ok(Self { data: data.into() })
+        let possible_passports: Vec<_> = data.split(PASSPORT_SEPARATOR).collect();
+        let mut passports: Vec<BasicPassport> = Vec::with_capacity(possible_passports.len());
+
+        for possible_passport in possible_passports {
+            passports.push(BasicPassport::new(possible_passport)?);
+        }
+
+        Ok(Self { passports })
     }
 }
 
 impl SilverChallenge for Day04 {
-    type Answer = ();
+    type Answer = u64;
     type Error = &'static str;
 
     fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error>
@@ -34,7 +42,7 @@ impl SilverChallenge for Day04 {
 }
 
 impl GoldChallenge for Day04 {
-    type Answer = ();
+    type Answer = u64;
     type Error = &'static str;
 
     fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error>

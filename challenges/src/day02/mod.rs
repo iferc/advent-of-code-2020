@@ -21,6 +21,31 @@ pub struct Password {
     password: String,
 }
 
+impl Password {
+    pub fn new(password: &str) -> Result<Password, String> {
+        let segments = password.split_whitespace().collect::<Vec<_>>();
+
+        if segments.len() != 3 {
+            return Err(format!("Unable to parse input line: {}", password));
+        }
+
+        let amount_range = str_to_range(segments[0])?;
+        let symbol = {
+            let mut symbol_chars = segments[1].to_string();
+            symbol_chars.pop();
+            symbol_chars
+        };
+
+        Ok(Password {
+            policy: PasswordPolicy {
+                amount_range,
+                symbol,
+            },
+            password: segments[2].to_string(),
+        })
+    }
+}
+
 fn str_to_range(s: &str) -> Result<Range<usize>, String> {
     let pair: Result<Vec<usize>, _> = s
         .split('-')
@@ -31,6 +56,9 @@ fn str_to_range(s: &str) -> Result<Range<usize>, String> {
 
     match pair {
         Err(_) => Err(format!("Failed to pair string to range: {}.", s)),
+        Ok(endpoints) if endpoints.len() != 2 => {
+            Err(format!("Failed to pair string to range: {}.", s))
+        }
         Ok(endpoints) => Ok(Range {
             start: endpoints[0],
             end: endpoints[1],
@@ -44,123 +72,19 @@ impl Day02 {
         let mut passwords = Vec::with_capacity(lines.len());
 
         for line in lines {
-            let segments = line.split_whitespace().collect::<Vec<_>>();
-
-            if segments.len() != 3 {
-                return Err(format!("Unable to parse input line: {}", line));
+            match Password::new(line) {
+                Ok(password) => passwords.push(password),
+                Err(error) => return Err(error),
             }
-
-            let amount_range = str_to_range(segments[0])?;
-            let symbol = {
-                let mut symbol_chars = segments[1].to_string();
-                symbol_chars.pop();
-                symbol_chars
-            };
-
-            passwords.push(Password {
-                policy: PasswordPolicy {
-                    amount_range,
-                    symbol,
-                },
-                password: segments[2].to_string(),
-            });
         }
 
         Ok(Day02 { passwords })
     }
 }
 
-#[test]
-fn sample_1_parses_as_1_valid() {
-    let input = "1-3 a: abcde".into();
-    let challenge = Day02::new(input);
-    assert_eq!(
-        challenge,
-        Ok(Day02 {
-            passwords: vec![Password {
-                policy: PasswordPolicy {
-                    amount_range: 1..3,
-                    symbol: "a".to_string(),
-                },
-                password: "abcde".to_string(),
-            }],
-        })
-    );
-}
-
-#[test]
-fn sample_2_parses_as_0_valid() {
-    let input = "1-3 b: cdefg".into();
-    let challenge = Day02::new(input);
-    assert_eq!(
-        challenge,
-        Ok(Day02 {
-            passwords: vec![Password {
-                policy: PasswordPolicy {
-                    amount_range: 1..3,
-                    symbol: "b".to_string(),
-                },
-                password: "cdefg".to_string(),
-            }],
-        })
-    );
-}
-
-#[test]
-fn sample_3_parses_as_1_valid() {
-    let input = "2-9 c: ccccccccc".into();
-    let challenge = Day02::new(input);
-    assert_eq!(
-        challenge,
-        Ok(Day02 {
-            passwords: vec![Password {
-                policy: PasswordPolicy {
-                    amount_range: 2..9,
-                    symbol: "c".to_string(),
-                },
-                password: "ccccccccc".to_string(),
-            }],
-        })
-    );
-}
-
-#[test]
-fn sample_all_1_through_3_parses_as_2_valid() {
-    let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
-    let challenge = Day02::new(input);
-    assert_eq!(
-        challenge,
-        Ok(Day02 {
-            passwords: vec![
-                Password {
-                    policy: PasswordPolicy {
-                        amount_range: 1..3,
-                        symbol: "a".to_string(),
-                    },
-                    password: "abcde".to_string(),
-                },
-                Password {
-                    policy: PasswordPolicy {
-                        amount_range: 1..3,
-                        symbol: "b".to_string(),
-                    },
-                    password: "cdefg".to_string(),
-                },
-                Password {
-                    policy: PasswordPolicy {
-                        amount_range: 2..9,
-                        symbol: "c".to_string(),
-                    },
-                    password: "ccccccccc".to_string(),
-                }
-            ],
-        })
-    );
-}
-
 impl SilverChallenge for Day02 {
     type Answer = usize;
-    type Error = String;
+    type Error = &'static str;
 
     fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error>
     where
@@ -186,41 +110,9 @@ impl SilverChallenge for Day02 {
     }
 }
 
-#[test]
-fn sample_1_silver_parses_as_1_valid() {
-    let input = "1-3 a: abcde".into();
-    let mut challenge = Day02::new(input).unwrap();
-    let answer = challenge.attempt_silver();
-    assert_eq!(answer.ok(), Some(1));
-}
-
-#[test]
-fn sample_2_silver_parses_as_0_valid() {
-    let input = "1-3 b: cdefg".into();
-    let mut challenge = Day02::new(input).unwrap();
-    let answer = challenge.attempt_silver();
-    assert_eq!(answer.ok(), Some(0));
-}
-
-#[test]
-fn sample_3_silver_parses_as_1_valid() {
-    let input = "2-9 c: ccccccccc".into();
-    let mut challenge = Day02::new(input).unwrap();
-    let answer = challenge.attempt_silver();
-    assert_eq!(answer.ok(), Some(1));
-}
-
-#[test]
-fn sample_all_silver_1_through_3_parses_as_2_valid() {
-    let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
-    let mut challenge = Day02::new(input).unwrap();
-    let answer = challenge.attempt_silver();
-    assert_eq!(answer.ok(), Some(2));
-}
-
 impl GoldChallenge for Day02 {
     type Answer = usize;
-    type Error = String;
+    type Error = &'static str;
 
     fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error>
     where
@@ -245,36 +137,4 @@ impl GoldChallenge for Day02 {
 
         Ok(occurrence_counts.len())
     }
-}
-
-#[test]
-fn sample_1_gold_parses_as_1_valid() {
-    let input = "1-3 a: abcde".into();
-    let mut challenge = Day02::new(input).unwrap();
-    let answer = challenge.attempt_gold();
-    assert_eq!(answer.ok(), Some(1));
-}
-
-#[test]
-fn sample_2_gold_parses_as_0_valid() {
-    let input = "1-3 b: cdefg".into();
-    let mut challenge = Day02::new(input).unwrap();
-    let answer = challenge.attempt_gold();
-    assert_eq!(answer.ok(), Some(0));
-}
-
-#[test]
-fn sample_3_gold_parses_as_1_valid() {
-    let input = "2-9 c: ccccccccc".into();
-    let mut challenge = Day02::new(input).unwrap();
-    let answer = challenge.attempt_gold();
-    assert_eq!(answer.ok(), Some(0));
-}
-
-#[test]
-fn sample_all_gold_1_through_3_parses_as_2_valid() {
-    let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
-    let mut challenge = Day02::new(input).unwrap();
-    let answer = challenge.attempt_gold();
-    assert_eq!(answer.ok(), Some(1));
 }

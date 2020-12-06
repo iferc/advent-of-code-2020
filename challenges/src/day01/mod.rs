@@ -13,7 +13,7 @@ impl Day01 {
     pub fn new(data: &str) -> Result<Self, String> {
         let maybe_lines: Result<Vec<u32>, _> = data.split_whitespace().map(|s| s.parse()).collect();
         let lines = match maybe_lines {
-            Err(_) => return Err("Error parsing number values from input".into()),
+            Err(_) => return Err("Error parsing number values from input".to_string()),
             Ok(mut lines) => {
                 lines.sort_unstable();
                 lines
@@ -33,9 +33,10 @@ pub struct SilverSolution {
     numbers: [u32; 2],
     result: u32,
 }
+
 impl SilverChallenge for Day01 {
     type Answer = SilverSolution;
-    type Error = String;
+    type Error = &'static str;
 
     fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error> {
         for asc_line in &self.values_asc {
@@ -54,7 +55,7 @@ impl SilverChallenge for Day01 {
             }
         }
 
-        Err("No solution found!".into())
+        Err("No solution found!")
     }
 }
 
@@ -63,9 +64,10 @@ pub struct GoldSolution {
     numbers: [u32; 3],
     result: u32,
 }
+
 impl GoldChallenge for Day01 {
     type Answer = GoldSolution;
-    type Error = String;
+    type Error = &'static str;
 
     fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error> {
         for asc_line_1 in &self.values_asc {
@@ -75,12 +77,11 @@ impl GoldChallenge for Day01 {
                 }
                 for desc_line in &self.values_desc {
                     // end iteration on collision
-                    if asc_line_1 > desc_line {
+                    if asc_line_1 > desc_line || asc_line_2 > desc_line {
                         break;
                     }
 
                     if 2020 == asc_line_1 + asc_line_2 + desc_line {
-                        // return Ok(format!("{}", asc_line_1 * asc_line_2 * desc_line));
                         return Ok(GoldSolution {
                             numbers: [*asc_line_1, *asc_line_2, *desc_line],
                             result: asc_line_1 * asc_line_2 * desc_line,
@@ -90,6 +91,6 @@ impl GoldChallenge for Day01 {
             }
         }
 
-        Err("No solution found!".into())
+        Err("No solution found!")
     }
 }

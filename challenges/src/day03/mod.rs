@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use crate::{GoldChallenge, SilverChallenge};
 
 #[derive(Debug, Clone, PartialEq)]
