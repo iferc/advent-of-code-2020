@@ -10,14 +10,15 @@ Due to some questionable network security, you realize you might be able to solv
 
 The automatic passport scanners are slow because they're having trouble _detecting which passports have all required fields_. The expected fields are as follows:
 
-`byr` (Birth Year)
-`iyr` (Issue Year)
-`eyr` (Expiration Year)
-`hgt` (Height)
-`hcl` (Hair Color)
-`ecl` (Eye Color)
-`pid` (Passport ID)
-`cid` (Country ID)
+- `byr` (Birth Year)
+- `iyr` (Issue Year)
+- `eyr` (Expiration Year)
+- `hgt` (Height)
+- `hcl` (Hair Color)
+- `ecl` (Eye Color)
+- `pid` (Passport ID)
+- `cid` (Country ID)
+
 Passport data is validated in batch files (your puzzle input). Each passport is represented as a sequence of `key:value` pairs separated by spaces or newlines. Passports are separated by blank lines.
 
 Here is an example batch file containing four passports:

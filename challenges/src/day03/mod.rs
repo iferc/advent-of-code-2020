@@ -22,7 +22,7 @@ impl SilverChallenge for Day03 {
     where
         Self::Answer: std::fmt::Debug,
     {
-        Err("NYI".into())
+        Err("NYI")
     }
 }
 
@@ -34,6 +34,6 @@ impl GoldChallenge for Day03 {
     where
         Self::Answer: std::fmt::Debug,
     {
-        Err("NYI".into())
+        Err("NYI")
     }
 }
