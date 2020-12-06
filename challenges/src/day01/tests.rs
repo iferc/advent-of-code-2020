@@ -20,15 +20,14 @@ fn sample_data_for_silver_solution_has_ok_result() {
 #[test]
 fn sample_data_for_silver_solution_has_ok_result_of() {
     let mut challenge = Day01::new(SAMPLE_DATA).unwrap();
-    let result = challenge.attempt_silver().unwrap();
+    let result = challenge.attempt_silver();
 
-    // replace the unit value `()` with the correct result based on the sample data
     assert_eq!(
         result,
-        SilverSolution {
+        Ok(SilverSolution {
             numbers: [1, 1],
             result: 1,
-        }
+        })
     );
 }
 
@@ -43,14 +42,13 @@ fn sample_data_for_gold_solution_has_ok_result() {
 #[test]
 fn sample_data_for_gold_solution_has_ok_result_of() {
     let mut challenge = Day01::new(SAMPLE_DATA).unwrap();
-    let result = challenge.attempt_gold().unwrap();
+    let result = challenge.attempt_gold();
 
-    // replace the unit value `()` with the correct result based on the sample data
     assert_eq!(
         result,
-        GoldSolution {
+        Ok(GoldSolution {
             numbers: [1, 2, 3],
             result: 2,
-        }
+        })
     );
 }
