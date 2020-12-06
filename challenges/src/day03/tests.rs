@@ -23,7 +23,7 @@ fn sample_data_for_silver_solution_has_ok_result_of() {
     let result = challenge.attempt_silver().unwrap();
 
     // replace the unit value `()` with the correct result based on the sample data
-    assert_eq!(result, ());
+    assert_eq!(result, 1);
 }
 
 #[test]
@@ -40,5 +40,5 @@ fn sample_data_for_gold_solution_has_ok_result_of() {
     let result = challenge.attempt_gold().unwrap();
 
     // replace the unit value `()` with the correct result based on the sample data
-    assert_eq!(result, ());
+    assert_eq!(result, 2);
 }
