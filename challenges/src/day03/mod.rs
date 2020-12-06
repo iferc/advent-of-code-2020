@@ -116,68 +116,6 @@ impl Day03 {
     }
 }
 
-#[cfg(test)]
-const SAMPLE_MAP: &'static str = r"..##.......
-#...#...#..
-.#....#..#.
-..#.#...#.#
-.#...##..#.
-..#.##.....
-.#.#.#....#
-.#........#
-#.##...#...
-#...##....#
-.#..#...#.#";
-
-#[test]
-fn sample_map_construction() {
-    let challenge = Day03::new(SAMPLE_MAP);
-    assert_ne!(challenge.ok(), None)
-}
-
-#[test]
-fn sample_map_navigation() {
-    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
-
-    assert_eq!(challenge.tile(), Some(&Tile::Open));
-    assert_eq!(challenge.navigate(3, 1).tile(), Some(&Tile::Open));
-    assert_eq!(challenge.navigate(1, 0).tile(), Some(&Tile::Tree));
-    assert_eq!(challenge.navigate(2, 1).tile(), Some(&Tile::Tree));
-    assert_eq!(challenge.location(), &MapLocation { right: 6, down: 2 });
-}
-
-#[test]
-fn sample_map_navigation_past_edge_of_map() {
-    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
-    assert_eq!(challenge.navigate(13, 0).tile(), Some(&Tile::Tree));
-
-    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
-    assert_eq!(challenge.navigate(14, 0).tile(), Some(&Tile::Tree));
-
-    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
-    assert_eq!(challenge.navigate(15, 0).tile(), Some(&Tile::Open));
-}
-
-#[test]
-fn sample_map_navigation_past_bottom_of_map() {
-    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
-    assert_eq!(challenge.navigate(0, 11).tile(), None);
-}
-
-#[test]
-fn sample_map_location() {
-    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
-
-    assert_eq!(
-        challenge
-            .navigate(3, 1)
-            .navigate(1, 0)
-            .navigate(2, 1)
-            .location(),
-        &MapLocation { right: 6, down: 2 }
-    );
-}
-
 impl SilverChallenge for Day03 {
     type Answer = usize;
     type Error = &'static str;
@@ -188,13 +126,6 @@ impl SilverChallenge for Day03 {
     {
         Ok(self.reset().count_trees_for_slope(3, 1))
     }
-}
-
-#[test]
-fn sample_map_silver_solution() {
-    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
-
-    assert_eq!(challenge.attempt_silver(), Ok(7));
 }
 
 impl GoldChallenge for Day03 {
@@ -221,11 +152,4 @@ impl GoldChallenge for Day03 {
 
         Ok(solution)
     }
-}
-
-#[test]
-fn sample_map_gold_solution() {
-    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
-
-    assert_eq!(challenge.attempt_gold(), Ok(336));
 }

@@ -1,7 +1,9 @@
 // import everything from the parent module file (in this case mod.rs)
 use super::*;
 
-const SAMPLE_DATA: &'static str = "<replace this with sample data from challenge>";
+const SAMPLE_DATA: &'static str = "BFFFBBFRRR
+FFFBBBFRRR
+BBFFBBFRLL";
 
 #[test]
 fn sample_data_builds_ok() {
@@ -22,7 +24,7 @@ fn sample_data_for_silver_solution_has_ok_result_of() {
     let mut challenge = Day05::new(SAMPLE_DATA).unwrap();
     let result = challenge.attempt_silver();
 
-    assert_eq!(result, Ok(4));
+    assert_eq!(result, Ok(820));
 }
 
 #[test]
@@ -38,5 +40,5 @@ fn sample_data_for_gold_solution_has_ok_result_of() {
     let mut challenge = Day05::new(SAMPLE_DATA).unwrap();
     let result = challenge.attempt_gold();
 
-    assert_eq!(result, Ok(3));
+    assert_eq!(result, Ok(120));
 }
