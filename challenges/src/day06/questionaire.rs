@@ -17,36 +17,13 @@ impl Questionaire {
     }
 
     fn letter_to_index(letter: char) -> Result<usize, String> {
-        // I would bet there is a smarter way to do this.. ¯\_(ツ)_/¯
-        Ok(match letter {
-            'a' => 0,
-            'b' => 1,
-            'c' => 2,
-            'd' => 3,
-            'e' => 4,
-            'f' => 5,
-            'g' => 6,
-            'h' => 7,
-            'i' => 8,
-            'j' => 9,
-            'k' => 10,
-            'l' => 11,
-            'm' => 12,
-            'n' => 13,
-            'o' => 14,
-            'p' => 15,
-            'q' => 16,
-            'r' => 17,
-            's' => 18,
-            't' => 19,
-            'u' => 20,
-            'v' => 21,
-            'w' => 22,
-            'x' => 23,
-            'y' => 24,
-            'z' => 25,
-            _ => return Err(format!("Unrecognized question letter given: {}.", letter)),
-        })
+        for (key, ch) in ('a'..='z').collect::<Vec<_>>().iter().enumerate() {
+            if *ch == letter {
+                return Ok(key);
+            }
+        }
+
+        Err(format!("Unrecognized question letter given: {}.", letter))
     }
 
     pub fn get_answers(&self) -> &[bool; 26] {
