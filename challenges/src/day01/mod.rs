@@ -5,13 +5,14 @@ use crate::{GoldChallenge, SilverChallenge};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Day01 {
-    values_asc: Vec<u32>,
-    values_desc: Vec<u32>,
+    values_asc: Vec<usize>,
+    values_desc: Vec<usize>,
 }
 
 impl Day01 {
     pub fn new(data: &str) -> Result<Self, String> {
-        let maybe_lines: Result<Vec<u32>, _> = data.split_whitespace().map(|s| s.parse()).collect();
+        let maybe_lines: Result<Vec<usize>, _> =
+            data.split_whitespace().map(|s| s.parse()).collect();
         let lines = match maybe_lines {
             Err(_) => return Err("Error parsing number values from input".to_string()),
             Ok(mut lines) => {
@@ -30,13 +31,13 @@ impl Day01 {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct SilverSolution {
-    numbers: [u32; 2],
-    result: u32,
+    numbers: [usize; 2],
+    result: usize,
 }
 
 impl SilverChallenge for Day01 {
     type Answer = SilverSolution;
-    type Error = &'static str;
+    type Error = String;
 
     fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error> {
         for asc_line in &self.values_asc {
@@ -46,28 +47,39 @@ impl SilverChallenge for Day01 {
                     break;
                 }
 
-                if 2020 == asc_line + desc_line {
+                if let Some(2020) = asc_line.checked_add(*desc_line) {
+                    // safe multiplication,
+                    let result = match asc_line.checked_mul(*desc_line) {
+                        None => {
+                            return Err(format!(
+                                "Integer overflowed, numbers too large to multiply: {} {}.",
+                                asc_line, desc_line
+                            ));
+                        }
+                        Some(result) => result,
+                    };
+
                     return Ok(SilverSolution {
                         numbers: [*asc_line, *desc_line],
-                        result: asc_line * desc_line,
+                        result,
                     });
                 }
             }
         }
 
-        Err("No solution found!")
+        Err("No solution found!".to_string())
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct GoldSolution {
-    numbers: [u32; 3],
-    result: u32,
+    numbers: [usize; 3],
+    result: usize,
 }
 
 impl GoldChallenge for Day01 {
     type Answer = GoldSolution;
-    type Error = &'static str;
+    type Error = String;
 
     fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error> {
         for asc_line_1 in &self.values_asc {
@@ -81,16 +93,54 @@ impl GoldChallenge for Day01 {
                         break;
                     }
 
-                    if 2020 == asc_line_1 + asc_line_2 + desc_line {
+                    // safe addition, possibly overkill but interesting to try
+                    let sum = match asc_line_1.checked_add(*asc_line_2) {
+                        None => {
+                            return Err(format!(
+                                "Integer overflowed, numbers too large to sum: {} {}.",
+                                asc_line_1, asc_line_2
+                            ));
+                        }
+                        Some(factor) => match factor.checked_add(*desc_line) {
+                            None => {
+                                return Err(format!(
+                                    "Integer overflowed, numbers too large to sum: {} {} {}.",
+                                    asc_line_1, asc_line_2, desc_line
+                                ));
+                            }
+                            Some(result) => result,
+                        },
+                    };
+
+                    if 2020 == sum {
+                        // safe multiplication, there must be a less verbose way to do this
+                        let result = match asc_line_1.checked_mul(*asc_line_2) {
+                            None => {
+                                return Err(format!(
+                                    "Integer overflowed, numbers too large to multiply: {} {}.",
+                                    asc_line_1, asc_line_2
+                                ));
+                            }
+                            Some(factor) => match factor.checked_mul(*desc_line) {
+                                None => {
+                                    return Err(format!(
+                                        "Integer overflowed, numbers too large to multiply: {} {} {}.",
+                                        asc_line_1, asc_line_2, desc_line
+                                    ));
+                                }
+                                Some(result) => result,
+                            },
+                        };
+
                         return Ok(GoldSolution {
                             numbers: [*asc_line_1, *asc_line_2, *desc_line],
-                            result: asc_line_1 * asc_line_2 * desc_line,
+                            result,
                         });
                     }
                 }
             }
         }
 
-        Err("No solution found!")
+        Err("No solution found!".to_string())
     }
 }
