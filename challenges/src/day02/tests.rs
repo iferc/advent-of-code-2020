@@ -1,5 +1,5 @@
 // import everything from the parent module file (in this case mod.rs)
-use super::*;
+use super::{password::*, *};
 
 #[test]
 fn sample_1_parses_as_1_valid() {
