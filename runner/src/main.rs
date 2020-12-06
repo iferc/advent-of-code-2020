@@ -1,14 +1,13 @@
-use advent_of_code_2020_challenges::*;
-use separator::Separatable;
+mod challenges;
+use challenges::{attempt_challenges_for_day, ChallengeOptions};
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
-use std::time::Instant;
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "Advent of Code 2020")]
-struct Opt {
+struct ApplicationOptions {
     /// Which day of the challenge to run, runs all by default
     #[structopt(long, env = "CHALLENGE_DAY")]
     day: Option<u32>,
@@ -21,9 +20,36 @@ struct Opt {
     #[structopt(short, long, env = "INPUT_DATA")]
     data: Option<String>,
 
-    /// Whether or not to hide solutions
+    /// Hide solutions
     #[structopt(long)]
     hide_solutions: bool,
+
+    /// Hide time tracking
+    #[structopt(long)]
+    hide_timing: bool,
+
+    /// Solve silver challenges, will solve both by default
+    #[structopt(short = "s", long)]
+    solve_silver: bool,
+
+    /// Solve gold challenges, will solve both by default
+    #[structopt(short = "g", long)]
+    solve_gold: bool,
+}
+
+fn build_challenge_options_for_day(options: &ApplicationOptions) -> ChallengeOptions {
+    let (solve_silver, solve_gold) = match (options.solve_silver, options.solve_gold) {
+        // if none specified, run both
+        (false, false) => (true, true),
+        // otherwise solve whichever are specified
+        (silver, gold) => (silver, gold),
+    };
+    ChallengeOptions::new(
+        !options.hide_timing,
+        !options.hide_solutions,
+        solve_silver,
+        solve_gold,
+    )
 }
 
 fn read_file(file_path: PathBuf) -> std::io::Result<String> {
@@ -35,131 +61,64 @@ fn read_file(file_path: PathBuf) -> std::io::Result<String> {
     Ok(contents)
 }
 
-fn solve_challenge<D>(
-    possible_challenge: Result<D, String>,
-    data_parse_start_time: Instant,
-    hide_solutions: bool,
-) -> Result<(), String>
-where
-    D: SilverChallenge + GoldChallenge + std::fmt::Debug,
-    <D as SilverChallenge>::Answer: std::fmt::Debug,
-    <D as GoldChallenge>::Answer: std::fmt::Debug,
-{
-    let mut challenge = match possible_challenge {
-        Err(error) => return Err(error),
-        Ok(challenge) => challenge,
-    };
-    let data_parse_total_time = data_parse_start_time.elapsed();
-    println!(
-        "-> Input data <-\nProcessing time: {} μs",
-        data_parse_total_time.as_micros().separated_string()
-    );
-
-    let silver_start_time = Instant::now();
-    let silver_solution = challenge.attempt_silver();
-    let silver_total_time = silver_start_time.elapsed();
-    println!(
-        "-> Silver <-\nProcessing time: {} μs",
-        silver_total_time.as_micros().separated_string(),
-    );
-    if !hide_solutions {
-        println!("{:#?}", silver_solution);
-    }
-
-    let gold_start_time = Instant::now();
-    let gold_solution = challenge.attempt_gold();
-    let gold_total_time = gold_start_time.elapsed();
-    println!(
-        "-> Gold <-\nProcessing time: {} μs",
-        gold_total_time.as_micros().separated_string(),
-    );
-    if !hide_solutions {
-        println!("{:#?}", gold_solution);
-    }
-
-    Ok(())
-}
-
-fn attempt_challenge_on_date(
-    day: u32,
-    data_override: &Option<String>,
-    hide_solutions: bool,
-) -> Result<(), String> {
-    let data = match data_override {
-        Some(data) => data.clone(),
+// gather data for test between overridden data or input text file
+fn prepare_challenge_data_for_day(
+    day: &u32,
+    possible_data_override: &Option<String>,
+) -> Result<String, String> {
+    match possible_data_override {
+        Some(data) => Ok(data.clone()),
         None => {
             let mut file_path = PathBuf::new();
             file_path.push("input");
             file_path.push(format!("day{:02}.txt", day));
 
             match read_file(file_path) {
-                Err(_) => return Err(format!("Unable to read input file for day {}.", day)),
-                Ok(file_data) => file_data,
+                Err(_) => Err(format!("Unable to read input file for day {}.", day)),
+                Ok(file_data) => Ok(file_data),
             }
         }
-    };
-
-    println!("===> Day {} <===", day);
-    let data_parse_start_time = Instant::now();
-    match day {
-        1 => solve_challenge(Day01::new(data), data_parse_start_time, hide_solutions)?,
-        2 => solve_challenge(Day02::new(data), data_parse_start_time, hide_solutions)?,
-        3 => solve_challenge(Day03::new(data), data_parse_start_time, hide_solutions)?,
-        4 => solve_challenge(Day04::new(data), data_parse_start_time, hide_solutions)?,
-        5 => solve_challenge(Day05::new(data), data_parse_start_time, hide_solutions)?,
-        6 => solve_challenge(Day06::new(data), data_parse_start_time, hide_solutions)?,
-        7 => solve_challenge(Day07::new(data), data_parse_start_time, hide_solutions)?,
-        8 => solve_challenge(Day08::new(data), data_parse_start_time, hide_solutions)?,
-        9 => solve_challenge(Day09::new(data), data_parse_start_time, hide_solutions)?,
-        10 => solve_challenge(Day10::new(data), data_parse_start_time, hide_solutions)?,
-        11 => solve_challenge(Day11::new(data), data_parse_start_time, hide_solutions)?,
-        12 => solve_challenge(Day12::new(data), data_parse_start_time, hide_solutions)?,
-        13 => solve_challenge(Day13::new(data), data_parse_start_time, hide_solutions)?,
-        14 => solve_challenge(Day14::new(data), data_parse_start_time, hide_solutions)?,
-        15 => solve_challenge(Day15::new(data), data_parse_start_time, hide_solutions)?,
-        16 => solve_challenge(Day16::new(data), data_parse_start_time, hide_solutions)?,
-        17 => solve_challenge(Day17::new(data), data_parse_start_time, hide_solutions)?,
-        18 => solve_challenge(Day18::new(data), data_parse_start_time, hide_solutions)?,
-        19 => solve_challenge(Day19::new(data), data_parse_start_time, hide_solutions)?,
-        20 => solve_challenge(Day20::new(data), data_parse_start_time, hide_solutions)?,
-        21 => solve_challenge(Day21::new(data), data_parse_start_time, hide_solutions)?,
-        22 => solve_challenge(Day22::new(data), data_parse_start_time, hide_solutions)?,
-        23 => solve_challenge(Day23::new(data), data_parse_start_time, hide_solutions)?,
-        24 => solve_challenge(Day24::new(data), data_parse_start_time, hide_solutions)?,
-        25 => solve_challenge(Day25::new(data), data_parse_start_time, hide_solutions)?,
-        _ => return Err(format!("Unrecognized date given: {}.", day)),
-    };
-
-    Ok(())
+    }
 }
 
 fn main() -> Result<(), String> {
-    let opt = Opt::from_args();
+    let options = ApplicationOptions::from_args();
+    let challenge_options = build_challenge_options_for_day(&options);
 
-    let data_override: Option<String> = match (opt.day, opt.data, opt.file) {
+    // conditions for whether to use input data or a file, or default file(s)
+    let possible_data_override: Option<String> = match (options.day, &options.data, &options.file) {
         (None, Some(_), _) | (None, _, Some(_)) => {
             return Err("Must specify date when providing data or file.".into())
         }
 
         (_, Some(_), Some(_)) => return Err("Cannot specify both data and file.".into()),
 
-        (Some(_), None, Some(file_path)) => match read_file(file_path) {
+        (Some(_), None, Some(file_path)) => match read_file(file_path.clone()) {
             Err(_) => return Err("Unable to read input file.".into()),
             Ok(file_data) => Some(file_data),
         },
 
-        (Some(_), Some(data), None) => Some(data),
+        (Some(_), Some(data), None) => Some(data.clone()),
 
         // no overrides specified for data or file
         (_, None, None) => None,
     };
 
-    if let Some(day) = opt.day {
-        return attempt_challenge_on_date(day, &data_override, opt.hide_solutions);
+    // when a specific day is specified, only that days challenges will run
+    // and if there is no input for that day, the application will terminate
+    if let Some(day) = &options.day {
+        let data = prepare_challenge_data_for_day(day, &possible_data_override).unwrap();
+        return attempt_challenges_for_day(day, &challenge_options, data);
     }
 
+    // when running through all days, will ignore days where no input exists
+    // and will not end the application when a challenge fails
     for day in 1..=25 {
-        attempt_challenge_on_date(day, &data_override, opt.hide_solutions).ok();
+        if let Ok(data) = prepare_challenge_data_for_day(&day, &possible_data_override) {
+            if let Err(error) = attempt_challenges_for_day(&day, &challenge_options, data) {
+                eprintln!("Failed to attempt challenge for day {}: {}", day, error);
+            }
+        }
     }
 
     Ok(())
