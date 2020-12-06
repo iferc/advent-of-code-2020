@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use crate::{GoldChallenge, SilverChallenge};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -7,7 +10,7 @@ pub struct Day01 {
 }
 
 impl Day01 {
-    pub fn new(data: String) -> Result<Self, String> {
+    pub fn new(data: &str) -> Result<Self, String> {
         let maybe_lines: Result<Vec<u32>, _> = data.split_whitespace().map(|s| s.parse()).collect();
         let lines = match maybe_lines {
             Err(_) => return Err("Error parsing number values from input".into()),
@@ -32,8 +35,9 @@ pub struct SilverSolution {
 }
 impl SilverChallenge for Day01 {
     type Answer = SilverSolution;
+    type Error = String;
 
-    fn attempt_silver(&mut self) -> Result<Self::Answer, String> {
+    fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error> {
         for asc_line in &self.values_asc {
             for desc_line in &self.values_desc {
                 // end iteration on collision
@@ -61,8 +65,9 @@ pub struct GoldSolution {
 }
 impl GoldChallenge for Day01 {
     type Answer = GoldSolution;
+    type Error = String;
 
-    fn attempt_gold(&mut self) -> Result<Self::Answer, String> {
+    fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error> {
         for asc_line_1 in &self.values_asc {
             for asc_line_2 in &self.values_asc {
                 if asc_line_1 > asc_line_2 {

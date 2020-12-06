@@ -31,7 +31,7 @@ pub struct Day03 {
 }
 
 impl Day03 {
-    pub fn new(data: String) -> Result<Self, String> {
+    pub fn new(data: &str) -> Result<Self, String> {
         let lines: Vec<_> = data.lines().collect();
 
         let height = lines.len();
@@ -128,13 +128,13 @@ const SAMPLE_MAP: &'static str = r"..##.......
 
 #[test]
 fn sample_map_construction() {
-    let challenge = Day03::new(SAMPLE_MAP.to_string());
+    let challenge = Day03::new(SAMPLE_MAP);
     assert_ne!(challenge.ok(), None)
 }
 
 #[test]
 fn sample_map_navigation() {
-    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
 
     assert_eq!(challenge.tile(), Some(&Tile::Open));
     assert_eq!(challenge.navigate(3, 1).tile(), Some(&Tile::Open));
@@ -145,25 +145,25 @@ fn sample_map_navigation() {
 
 #[test]
 fn sample_map_navigation_past_edge_of_map() {
-    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
     assert_eq!(challenge.navigate(13, 0).tile(), Some(&Tile::Tree));
 
-    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
     assert_eq!(challenge.navigate(14, 0).tile(), Some(&Tile::Tree));
 
-    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
     assert_eq!(challenge.navigate(15, 0).tile(), Some(&Tile::Open));
 }
 
 #[test]
 fn sample_map_navigation_past_bottom_of_map() {
-    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
     assert_eq!(challenge.navigate(0, 11).tile(), None);
 }
 
 #[test]
 fn sample_map_location() {
-    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
 
     assert_eq!(
         challenge
@@ -177,8 +177,9 @@ fn sample_map_location() {
 
 impl SilverChallenge for Day03 {
     type Answer = usize;
+    type Error = &'static str;
 
-    fn attempt_silver(&mut self) -> Result<Self::Answer, String>
+    fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error>
     where
         Self::Answer: std::fmt::Debug,
     {
@@ -188,15 +189,16 @@ impl SilverChallenge for Day03 {
 
 #[test]
 fn sample_map_silver_solution() {
-    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
 
     assert_eq!(challenge.attempt_silver(), Ok(7));
 }
 
 impl GoldChallenge for Day03 {
     type Answer = usize;
+    type Error = &'static str;
 
-    fn attempt_gold(&mut self) -> Result<Self::Answer, String>
+    fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error>
     where
         Self::Answer: std::fmt::Debug,
     {
@@ -220,7 +222,7 @@ impl GoldChallenge for Day03 {
 
 #[test]
 fn sample_map_gold_solution() {
-    let mut challenge = Day03::new(SAMPLE_MAP.to_string()).unwrap();
+    let mut challenge = Day03::new(SAMPLE_MAP).unwrap();
 
     assert_eq!(challenge.attempt_gold(), Ok(336));
 }

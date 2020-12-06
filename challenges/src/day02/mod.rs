@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use crate::{GoldChallenge, SilverChallenge};
 use std::ops::Range;
 
@@ -36,7 +39,7 @@ fn str_to_range(s: &str) -> Result<Range<usize>, String> {
 }
 
 impl Day02 {
-    pub fn new(data: String) -> Result<Self, String> {
+    pub fn new(data: &str) -> Result<Self, String> {
         let lines = data.lines().collect::<Vec<_>>();
         let mut passwords = Vec::with_capacity(lines.len());
 
@@ -157,8 +160,9 @@ fn sample_all_1_through_3_parses_as_2_valid() {
 
 impl SilverChallenge for Day02 {
     type Answer = usize;
+    type Error = String;
 
-    fn attempt_silver(&mut self) -> Result<Self::Answer, String>
+    fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error>
     where
         Self::Answer: std::fmt::Debug,
     {
@@ -216,8 +220,9 @@ fn sample_all_silver_1_through_3_parses_as_2_valid() {
 
 impl GoldChallenge for Day02 {
     type Answer = usize;
+    type Error = String;
 
-    fn attempt_gold(&mut self) -> Result<Self::Answer, String>
+    fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error>
     where
         Self::Answer: std::fmt::Debug,
     {
