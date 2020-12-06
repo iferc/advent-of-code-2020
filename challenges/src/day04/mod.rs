@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use crate::{GoldChallenge, SilverChallenge};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -6,14 +9,16 @@ pub struct Day04 {
 }
 
 impl Day04 {
-    pub fn new(data: String) -> Result<Self, String> {
-        Ok(Self { data })
+    pub fn new(data: &str) -> Result<Self, String> {
+        Ok(Self { data: data.into() })
     }
 }
 
 impl SilverChallenge for Day04 {
     type Answer = ();
-    fn attempt_silver(&mut self) -> Result<Self::Answer, String>
+    type Error = &'static str;
+
+    fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error>
     where
         Self::Answer: std::fmt::Debug,
     {
@@ -23,7 +28,9 @@ impl SilverChallenge for Day04 {
 
 impl GoldChallenge for Day04 {
     type Answer = ();
-    fn attempt_gold(&mut self) -> Result<Self::Answer, String>
+    type Error = &'static str;
+
+    fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error>
     where
         Self::Answer: std::fmt::Debug,
     {

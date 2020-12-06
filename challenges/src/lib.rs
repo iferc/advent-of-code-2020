@@ -52,14 +52,20 @@ pub use day25::Day25;
 
 pub trait SilverChallenge {
     type Answer;
-    fn attempt_silver(&mut self) -> Result<Self::Answer, String>
+    type Error;
+
+    fn attempt_silver(&mut self) -> Result<Self::Answer, Self::Error>
     where
-        Self::Answer: std::fmt::Debug;
+        Self::Answer: std::fmt::Debug,
+        Self::Error: std::fmt::Debug;
 }
 
 pub trait GoldChallenge {
     type Answer;
-    fn attempt_gold(&mut self) -> Result<Self::Answer, String>
+    type Error;
+
+    fn attempt_gold(&mut self) -> Result<Self::Answer, Self::Error>
     where
-        Self::Answer: std::fmt::Debug;
+        Self::Answer: std::fmt::Debug,
+        Self::Error: std::fmt::Debug;
 }
