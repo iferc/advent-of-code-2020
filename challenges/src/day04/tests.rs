@@ -1,44 +1,80 @@
-// import everything from the parent module file (in this case mod.rs)
 use super::*;
 
-const SAMPLE_DATA: &'static str = "<replace this with sample data from challenge>";
+const SAMPLE_PASSPORTS: &'static str = "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+    byr:1937 iyr:2017 cid:147 hgt:183cm
+
+    iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
+    hcl:#cfa07d byr:1929
+
+    hcl:#ae17e1 iyr:2013
+    eyr:2024
+    ecl:brn pid:760753108 byr:1931
+    hgt:179cm
+
+    hcl:#cfa07d eyr:2025 pid:166559648
+    iyr:2011 ecl:brn hgt:59in";
 
 #[test]
-fn sample_data_builds_ok() {
-    // unwrap will fail the test here if the day input parsing returned an Err
-    Day04::new(SAMPLE_DATA).unwrap();
+fn sample_inputs_parse_correctly() {
+    let challenge = Day04::new(SAMPLE_PASSPORTS);
+    match challenge {
+        Ok(_) => {}
+        Err(_) => panic!(),
+    }
 }
 
 #[test]
-fn sample_data_for_silver_solution_has_ok_result() {
-    let mut challenge = Day04::new(SAMPLE_DATA).unwrap();
+fn sample_inputs_has_correct_validations() {
+    let challenge = Day04::new(SAMPLE_PASSPORTS).unwrap();
 
-    // unwrap will fail the test here if the silver challenge returned an Err
-    challenge.attempt_silver().unwrap();
+    assert_eq!(challenge.passports.len(), 4);
+    assert_eq!(challenge.passports[0].has_required_fields(), true);
+    assert_eq!(challenge.passports[1].has_required_fields(), false);
+    assert_eq!(challenge.passports[2].has_required_fields(), true);
+    assert_eq!(challenge.passports[3].has_required_fields(), false);
 }
 
-#[test]
-fn sample_data_for_silver_solution_has_ok_result_of() {
-    let mut challenge = Day04::new(SAMPLE_DATA).unwrap();
-    let result = challenge.attempt_silver().unwrap();
+const STRICT_ALL_INVALID: &'static str = "eyr:1972 cid:100
+hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
 
-    // replace the unit value `()` with the correct result based on the sample data
-    assert_eq!(result, ());
+iyr:2019
+hcl:#602927 eyr:1967 hgt:170cm
+ecl:grn pid:012533040 byr:1946
+
+hcl:dab227 iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+hgt:59cm ecl:zzz
+eyr:2038 hcl:74454a iyr:2023
+pid:3556412378 byr:2007";
+
+#[test]
+fn strict_passports_all_invalid() {
+    let mut challenge = Day04::new(STRICT_ALL_INVALID).unwrap();
+    let result = challenge.attempt_gold().ok();
+
+    assert_ne!(result, None);
+    assert_eq!(result, Some(0));
 }
 
+const STRICT_ALL_VALID: &'static str = "pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+hcl:#623a2f
+
+eyr:2029 ecl:blu cid:129 byr:1989
+iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
+
+hcl:#888785
+hgt:164cm byr:2001 iyr:2015 cid:88
+pid:545766238 ecl:hzl
+eyr:2022
+
+iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719";
+
 #[test]
-fn sample_data_for_gold_solution_has_ok_result() {
-    let mut challenge = Day04::new(SAMPLE_DATA).unwrap();
+fn strict_passports_all_valid() {
+    let mut challenge = Day04::new(STRICT_ALL_VALID).unwrap();
+    let result = challenge.attempt_gold().ok();
 
-    // unwrap will fail the test here if the silver challenge returned an Err
-    challenge.attempt_gold().unwrap();
-}
-
-#[test]
-fn sample_data_for_gold_solution_has_ok_result_of() {
-    let mut challenge = Day04::new(SAMPLE_DATA).unwrap();
-    let result = challenge.attempt_gold().unwrap();
-
-    // replace the unit value `()` with the correct result based on the sample data
-    assert_eq!(result, ());
+    assert_ne!(result, None);
+    assert_eq!(result, Some(4));
 }

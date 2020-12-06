@@ -1,44 +1,153 @@
-// import everything from the parent module file (in this case mod.rs)
 use super::*;
 
-const SAMPLE_DATA: &'static str = "<replace this with sample data from challenge>";
-
 #[test]
-fn sample_data_builds_ok() {
-    // unwrap will fail the test here if the day input parsing returned an Err
-    Day02::new(SAMPLE_DATA).unwrap();
+fn sample_1_parses_as_1_valid() {
+    let input = "1-3 a: abcde".into();
+    let challenge = Day02::new(input);
+    assert_eq!(
+        challenge,
+        Ok(Day02 {
+            passwords: vec![Password {
+                policy: PasswordPolicy {
+                    amount_range: 1..3,
+                    symbol: "a".to_string(),
+                },
+                password: "abcde".to_string(),
+            }],
+        })
+    );
 }
 
 #[test]
-fn sample_data_for_silver_solution_has_ok_result() {
-    let mut challenge = Day02::new(SAMPLE_DATA).unwrap();
-
-    // unwrap will fail the test here if the silver challenge returned an Err
-    challenge.attempt_silver().unwrap();
+fn sample_2_parses_as_0_valid() {
+    let input = "1-3 b: cdefg".into();
+    let challenge = Day02::new(input);
+    assert_eq!(
+        challenge,
+        Ok(Day02 {
+            passwords: vec![Password {
+                policy: PasswordPolicy {
+                    amount_range: 1..3,
+                    symbol: "b".to_string(),
+                },
+                password: "cdefg".to_string(),
+            }],
+        })
+    );
 }
 
 #[test]
-fn sample_data_for_silver_solution_has_ok_result_of() {
-    let mut challenge = Day02::new(SAMPLE_DATA).unwrap();
-    let result = challenge.attempt_silver().unwrap();
-
-    // replace the unit value `()` with the correct result based on the sample data
-    assert_eq!(result, ());
+fn sample_3_parses_as_1_valid() {
+    let input = "2-9 c: ccccccccc".into();
+    let challenge = Day02::new(input);
+    assert_eq!(
+        challenge,
+        Ok(Day02 {
+            passwords: vec![Password {
+                policy: PasswordPolicy {
+                    amount_range: 2..9,
+                    symbol: "c".to_string(),
+                },
+                password: "ccccccccc".to_string(),
+            }],
+        })
+    );
 }
 
 #[test]
-fn sample_data_for_gold_solution_has_ok_result() {
-    let mut challenge = Day02::new(SAMPLE_DATA).unwrap();
-
-    // unwrap will fail the test here if the silver challenge returned an Err
-    challenge.attempt_gold().unwrap();
+fn sample_all_1_through_3_parses_as_2_valid() {
+    let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
+    let challenge = Day02::new(input);
+    assert_eq!(
+        challenge,
+        Ok(Day02 {
+            passwords: vec![
+                Password {
+                    policy: PasswordPolicy {
+                        amount_range: 1..3,
+                        symbol: "a".to_string(),
+                    },
+                    password: "abcde".to_string(),
+                },
+                Password {
+                    policy: PasswordPolicy {
+                        amount_range: 1..3,
+                        symbol: "b".to_string(),
+                    },
+                    password: "cdefg".to_string(),
+                },
+                Password {
+                    policy: PasswordPolicy {
+                        amount_range: 2..9,
+                        symbol: "c".to_string(),
+                    },
+                    password: "ccccccccc".to_string(),
+                }
+            ],
+        })
+    );
 }
 
 #[test]
-fn sample_data_for_gold_solution_has_ok_result_of() {
-    let mut challenge = Day02::new(SAMPLE_DATA).unwrap();
-    let result = challenge.attempt_gold().unwrap();
+fn sample_1_silver_parses_as_1_valid() {
+    let input = "1-3 a: abcde".into();
+    let mut challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_silver();
+    assert_eq!(answer.ok(), Some(1));
+}
 
-    // replace the unit value `()` with the correct result based on the sample data
-    assert_eq!(result, ());
+#[test]
+fn sample_2_silver_parses_as_0_valid() {
+    let input = "1-3 b: cdefg".into();
+    let mut challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_silver();
+    assert_eq!(answer.ok(), Some(0));
+}
+
+#[test]
+fn sample_3_silver_parses_as_1_valid() {
+    let input = "2-9 c: ccccccccc".into();
+    let mut challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_silver();
+    assert_eq!(answer.ok(), Some(1));
+}
+
+#[test]
+fn sample_all_silver_1_through_3_parses_as_2_valid() {
+    let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
+    let mut challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_silver();
+    assert_eq!(answer.ok(), Some(2));
+}
+
+#[test]
+fn sample_1_gold_parses_as_1_valid() {
+    let input = "1-3 a: abcde".into();
+    let mut challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_gold();
+    assert_eq!(answer.ok(), Some(1));
+}
+
+#[test]
+fn sample_2_gold_parses_as_0_valid() {
+    let input = "1-3 b: cdefg".into();
+    let mut challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_gold();
+    assert_eq!(answer.ok(), Some(0));
+}
+
+#[test]
+fn sample_3_gold_parses_as_1_valid() {
+    let input = "2-9 c: ccccccccc".into();
+    let mut challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_gold();
+    assert_eq!(answer.ok(), Some(0));
+}
+
+#[test]
+fn sample_all_gold_1_through_3_parses_as_2_valid() {
+    let input = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc".into();
+    let mut challenge = Day02::new(input).unwrap();
+    let answer = challenge.attempt_gold();
+    assert_eq!(answer.ok(), Some(1));
 }
