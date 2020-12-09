@@ -1,5 +1,7 @@
 # Day 6: Custom Customs
 
+Original source available at [Advent of Code](https://adventofcode.com/2020/day/6)
+
 ## Silver Challenge
 
 As your flight approaches the regional airport where you'll switch to a much larger plane, customs declaration forms are distributed to the passengers.

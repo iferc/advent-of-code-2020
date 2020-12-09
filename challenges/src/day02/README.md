@@ -1,5 +1,7 @@
 # Day 2: Password Philosophy
 
+Original source available at [Advent of Code](https://adventofcode.com/2020/day/2)
+
 ## Silver Challenge
 
 Your flight departs in a few days from the coastal airport; the easiest way down to the coast from here is via toboggan.
