@@ -1,5 +1,7 @@
 # Day 11
 
+Original source available at [Advent of Code](https://adventofcode.com/2020/day/11)
+
 ## Silver Challenge
 
 Silver challenge details will be released on the 11th of December, 2020.
